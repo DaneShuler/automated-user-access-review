@@ -1,10 +1,7 @@
 from pathlib import Path
-import json
 
 import pandas as pd
 import streamlit as st
-
-from src.review import record_decision
 
 
 # ---------------------------------------------------------
@@ -12,12 +9,11 @@ from src.review import record_decision
 # ---------------------------------------------------------
 
 ROOT = Path(__file__).parent
-OUTPUT = ROOT / "output"
+DEMO = ROOT / "demo"
 
-CAMPAIGN_FILE = OUTPUT / "review_campaign.csv"
-AUDIT_FILE = OUTPUT / "audit_log.csv"
-REMEDIATION_FILE = OUTPUT / "remediation_queue.csv"
-CONFIG_FILE = ROOT / "config.json"
+CAMPAIGN_FILE = DEMO / "review_campaign.csv"
+AUDIT_FILE = DEMO / "audit_log.csv"
+REMEDIATION_FILE = DEMO / "remediation_queue.csv"
 
 
 # ---------------------------------------------------------
@@ -36,11 +32,7 @@ st.set_page_config(
 
 def load_csv(path):
     """
-    Loads a CSV file and replaces empty values with
-    blank strings.
-
-    If the file does not exist yet, an empty DataFrame
-    is returned instead.
+    Load one of the synthetic baseline demo files.
     """
 
     if not path.exists():
@@ -49,23 +41,38 @@ def load_csv(path):
     return pd.read_csv(path).fillna("")
 
 
-def load_config():
+def initialize_demo():
     """
-    Loads project settings from config.json.
+    Give each Streamlit session its own working copy of
+    the campaign, audit history, and remediation queue.
+
+    Changes made through the dashboard affect only the
+    current visitor's session.
     """
 
-    if not CONFIG_FILE.exists():
-        return {}
+    if "campaign" not in st.session_state:
+        st.session_state.campaign = load_csv(CAMPAIGN_FILE)
 
-    return json.loads(
-        CONFIG_FILE.read_text(encoding="utf-8")
+    if "audit_log" not in st.session_state:
+        st.session_state.audit_log = load_csv(AUDIT_FILE)
+
+    if "remediation_queue" not in st.session_state:
+        st.session_state.remediation_queue = load_csv(
+            REMEDIATION_FILE
+        )
+
+
+def reset_demo():
+    """
+    Restore the current session to the original synthetic
+    demonstration data.
+    """
+
+    st.session_state.campaign = load_csv(CAMPAIGN_FILE)
+    st.session_state.audit_log = load_csv(AUDIT_FILE)
+    st.session_state.remediation_queue = load_csv(
+        REMEDIATION_FILE
     )
-
-
-campaign = load_csv(CAMPAIGN_FILE)
-audit_log = load_csv(AUDIT_FILE)
-remediation_queue = load_csv(REMEDIATION_FILE)
-config = load_config()
 
 
 # ---------------------------------------------------------
@@ -73,10 +80,6 @@ config = load_config()
 # ---------------------------------------------------------
 
 def risk_icon(risk_level):
-    """
-    Returns a simple visual indicator for each risk level.
-    """
-
     icons = {
         "CRITICAL": "🔴",
         "HIGH": "🟠",
@@ -91,15 +94,11 @@ def risk_icon(risk_level):
 
 
 def decision_icon(decision):
-    """
-    Returns a visual indicator for review decisions.
-    """
-
     icons = {
-        "CERTIFY": "✅",
-        "REVOKE": "❌",
-        "MODIFY": "✏️",
-        "ESCALATE": "⚠️"
+        "CERTIFY": "✓",
+        "REVOKE": "✕",
+        "MODIFY": "✎",
+        "ESCALATE": "!"
     }
 
     return icons.get(
@@ -109,11 +108,6 @@ def decision_icon(decision):
 
 
 def format_identity_type(identity_type):
-    """
-    Converts internal identity type names into
-    easier-to-read labels.
-    """
-
     if identity_type == "NHI":
         return "Service / Non-Human Identity"
 
@@ -124,11 +118,6 @@ def format_identity_type(identity_type):
 
 
 def parse_risk_reasons(value):
-    """
-    Converts the semicolon-separated risk reasons stored
-    in the campaign into a list.
-    """
-
     if not value:
         return []
 
@@ -142,6 +131,215 @@ def parse_risk_reasons(value):
     ]
 
 
+def record_demo_decision(
+    item_id,
+    reviewer,
+    decision,
+    justification
+):
+    """
+    Record a review decision in the current Streamlit
+    session only.
+
+    Nothing is written to the repository or to an
+    external identity system.
+    """
+
+    campaign = st.session_state.campaign.copy()
+
+    matches = campaign.index[
+        campaign["item_id"] == item_id
+    ].tolist()
+
+    if not matches:
+        raise ValueError(
+            f"Unknown review item: {item_id}"
+        )
+
+    index = matches[0]
+    item = campaign.loc[index].copy()
+
+    existing_decision = str(
+        item.get("decision", "")
+    ).strip()
+
+    if existing_decision:
+        raise ValueError(
+            f"{item_id} has already been reviewed with "
+            f"the decision '{existing_decision}'."
+        )
+
+    assigned_reviewer = str(
+        item.get("reviewer", "")
+    ).strip()
+
+    if reviewer.strip() != assigned_reviewer:
+        raise ValueError(
+            f"{reviewer} is not authorized to review "
+            f"{item_id}. This item is assigned to "
+            f"{assigned_reviewer}."
+        )
+
+    decision = decision.upper().strip()
+
+    valid_decisions = {
+        "CERTIFY",
+        "REVOKE",
+        "MODIFY",
+        "ESCALATE"
+    }
+
+    if decision not in valid_decisions:
+        raise ValueError(
+            "Invalid review decision."
+        )
+
+    if not justification.strip():
+        raise ValueError(
+            "Reviewer justification is required."
+        )
+
+    # Update this visitor's campaign.
+    campaign.at[index, "decision"] = decision
+    campaign.at[index, "justification"] = justification
+
+    st.session_state.campaign = campaign
+
+    # Create the audit event.
+    timestamp = pd.Timestamp.now(tz="UTC").isoformat()
+
+    event = {
+        "timestamp_utc": timestamp,
+        "item_id": item_id,
+        "identity_type": item.get(
+            "identity_type",
+            ""
+        ),
+        "identity_id": item.get(
+            "identity_id",
+            ""
+        ),
+        "identity_name": item.get(
+            "identity_name",
+            ""
+        ),
+        "application": item.get(
+            "application",
+            ""
+        ),
+        "access": item.get(
+            "access",
+            ""
+        ),
+        "assigned_reviewer": assigned_reviewer,
+        "reviewed_by": reviewer.strip(),
+        "decision": decision,
+        "justification": justification.strip(),
+        "risk_score": item.get(
+            "risk_score",
+            ""
+        ),
+        "risk_level": item.get(
+            "risk_level",
+            ""
+        ),
+        "risk_reasons": item.get(
+            "risk_reasons",
+            ""
+        )
+    }
+
+    audit = st.session_state.audit_log.copy()
+
+    audit = pd.concat(
+        [
+            audit,
+            pd.DataFrame([event])
+        ],
+        ignore_index=True
+    )
+
+    st.session_state.audit_log = audit
+
+    # Only decisions requiring further action enter
+    # the remediation queue.
+    if decision in {
+        "REVOKE",
+        "MODIFY",
+        "ESCALATE"
+    }:
+
+        remediation_event = {
+            **event,
+            "status": "PENDING",
+            "dry_run": True
+        }
+
+        remediation = (
+            st.session_state.remediation_queue.copy()
+        )
+
+        remediation = pd.concat(
+            [
+                remediation,
+                pd.DataFrame(
+                    [remediation_event]
+                )
+            ],
+            ignore_index=True
+        )
+
+        st.session_state.remediation_queue = remediation
+
+    return event
+
+
+# ---------------------------------------------------------
+# Initialize Session
+# ---------------------------------------------------------
+
+initialize_demo()
+
+campaign = st.session_state.campaign
+audit_log = st.session_state.audit_log
+remediation_queue = st.session_state.remediation_queue
+
+
+# ---------------------------------------------------------
+# Sidebar
+# ---------------------------------------------------------
+
+with st.sidebar:
+
+    st.header("Demo Environment")
+
+    st.caption(
+        "This dashboard uses synthetic identity and access "
+        "data. Changes made here affect only your current "
+        "demo session."
+    )
+
+    st.divider()
+
+    st.write(
+        "Use Reset Demo to restore the campaign, audit "
+        "history, and remediation queue to their original "
+        "example state."
+    )
+
+    confirm_reset = st.checkbox(
+        "Confirm reset"
+    )
+
+    if st.button(
+        "Reset Demo",
+        disabled=not confirm_reset,
+        use_container_width=True
+    ):
+        reset_demo()
+        st.rerun()
+
+
 # ---------------------------------------------------------
 # Page Header
 # ---------------------------------------------------------
@@ -152,15 +350,22 @@ st.caption(
     "Risk-based review of employee and service account access."
 )
 
+st.info(
+    "**Demo Environment:** All identities, applications, "
+    "access records, and review data are synthetic. "
+    "This application does not connect to or modify any "
+    "production identity systems."
+)
+
 
 # ---------------------------------------------------------
 # Campaign Check
 # ---------------------------------------------------------
 
 if campaign.empty:
+
     st.warning(
-        "No review campaign was found. "
-        "Run `python main.py campaign` first."
+        "No demonstration campaign was found."
     )
 
     st.stop()
@@ -184,10 +389,6 @@ medium_reviews = (
     campaign["risk_level"] == "MEDIUM"
 ).sum()
 
-normal_reviews = (
-    campaign["risk_level"] == "NORMAL"
-).sum()
-
 completed_reviews = (
     campaign["decision"] != ""
 ).sum()
@@ -199,7 +400,9 @@ pending_reviews = (
 
 st.subheader("Campaign Overview")
 
-metric1, metric2, metric3, metric4, metric5, metric6 = st.columns(6)
+metric1, metric2, metric3, metric4, metric5, metric6 = (
+    st.columns(6)
+)
 
 metric1.metric(
     "Total Reviews",
@@ -233,10 +436,11 @@ metric6.metric(
 
 
 # ---------------------------------------------------------
-# Progress
+# Campaign Progress
 # ---------------------------------------------------------
 
 if total_reviews > 0:
+
     completion_percentage = (
         completed_reviews / total_reviews
     )
@@ -256,7 +460,7 @@ st.divider()
 
 
 # ---------------------------------------------------------
-# Main Navigation
+# Main Tabs
 # ---------------------------------------------------------
 
 reviews_tab, remediation_tab, audit_tab = st.tabs(
@@ -269,7 +473,7 @@ reviews_tab, remediation_tab, audit_tab = st.tabs(
 
 
 # =========================================================
-# ACCESS REVIEWS TAB
+# ACCESS REVIEWS
 # =========================================================
 
 with reviews_tab:
@@ -280,19 +484,19 @@ with reviews_tab:
     # Filters
     # -----------------------------------------------------
 
-    filter1, filter2, filter3, filter4, filter5 = st.columns(5)
-
-    risk_options = [
-        "All",
-        "CRITICAL",
-        "HIGH",
-        "MEDIUM",
-        "NORMAL"
-    ]
+    filter1, filter2, filter3, filter4, filter5 = (
+        st.columns(5)
+    )
 
     selected_risk = filter1.selectbox(
         "Risk Level",
-        risk_options
+        [
+            "All",
+            "CRITICAL",
+            "HIGH",
+            "MEDIUM",
+            "NORMAL"
+        ]
     )
 
     application_options = [
@@ -309,15 +513,13 @@ with reviews_tab:
         application_options
     )
 
-    identity_options = [
-        "All",
-        "HUMAN",
-        "NHI"
-    ]
-
     selected_identity = filter3.selectbox(
         "Identity Type",
-        identity_options
+        [
+            "All",
+            "HUMAN",
+            "NHI"
+        ]
     )
 
     reviewer_options = [
@@ -334,15 +536,13 @@ with reviews_tab:
         reviewer_options
     )
 
-    status_options = [
-        "All",
-        "Pending",
-        "Completed"
-    ]
-
     selected_status = filter5.selectbox(
         "Review Status",
-        status_options
+        [
+            "All",
+            "Pending",
+            "Completed"
+        ]
     )
 
 
@@ -388,7 +588,7 @@ with reviews_tab:
 
 
     # -----------------------------------------------------
-    # Review Table
+    # Campaign Table
     # -----------------------------------------------------
 
     st.write(
@@ -399,18 +599,23 @@ with reviews_tab:
     display_campaign = filtered_campaign.copy()
 
     display_campaign["risk"] = (
-        display_campaign["risk_level"].apply(risk_icon)
+        display_campaign["risk_level"].apply(
+            risk_icon
+        )
         + " "
-        + display_campaign["risk_level"].astype(str)
+        + display_campaign[
+            "risk_level"
+        ].astype(str)
     )
 
     display_campaign["review_status"] = (
-        display_campaign["decision"]
-        .apply(
+        display_campaign["decision"].apply(
             lambda value:
-            f"{decision_icon(value)} {value}"
-            if value
-            else "Pending"
+            (
+                f"{decision_icon(value)} {value}"
+                if value
+                else "Pending"
+            )
         )
     )
 
@@ -428,7 +633,9 @@ with reviews_tab:
     ]
 
     st.dataframe(
-        display_campaign[display_columns],
+        display_campaign[
+            display_columns
+        ],
         use_container_width=True,
         hide_index=True,
         column_config={
@@ -447,7 +654,7 @@ with reviews_tab:
 
 
     # -----------------------------------------------------
-    # Individual Review Workspace
+    # Individual Review
     # -----------------------------------------------------
 
     st.divider()
@@ -490,10 +697,6 @@ with reviews_tab:
 
             item = selected_rows.iloc[0]
 
-            # -------------------------------------------------
-            # Identity Summary
-            # -------------------------------------------------
-
             st.markdown(
                 f"### {risk_icon(item['risk_level'])} "
                 f"{item['identity_name']}"
@@ -504,7 +707,9 @@ with reviews_tab:
                 f"• Review Item {item['item_id']}"
             )
 
-            detail1, detail2, detail3, detail4 = st.columns(4)
+            detail1, detail2, detail3, detail4 = (
+                st.columns(4)
+            )
 
             detail1.metric(
                 "Application",
@@ -527,15 +732,15 @@ with reviews_tab:
             )
 
 
-            # -------------------------------------------------
-            # Reviewer and Recommendation
-            # -------------------------------------------------
-
-            reviewer_col, recommendation_col = st.columns(2)
+            reviewer_col, recommendation_col = (
+                st.columns(2)
+            )
 
             with reviewer_col:
 
-                st.markdown("**Assigned Reviewer**")
+                st.markdown(
+                    "**Assigned Reviewer**"
+                )
 
                 st.write(
                     item["reviewer"]
@@ -543,18 +748,18 @@ with reviews_tab:
 
             with recommendation_col:
 
-                st.markdown("**Recommended Action**")
+                st.markdown(
+                    "**Recommended Action**"
+                )
 
                 st.write(
                     item["recommendation"]
                 )
 
 
-            # -------------------------------------------------
-            # Risk Reasons
-            # -------------------------------------------------
-
-            st.markdown("#### Why was this flagged?")
+            st.markdown(
+                "#### Why was this flagged?"
+            )
 
             reasons = parse_risk_reasons(
                 item["risk_reasons"]
@@ -570,7 +775,8 @@ with reviews_tab:
             else:
 
                 st.write(
-                    "No elevated risk conditions were identified."
+                    "No elevated risk conditions "
+                    "were identified."
                 )
 
 
@@ -587,13 +793,17 @@ with reviews_tab:
                 st.divider()
 
                 st.success(
-                    f"This review has already been completed: "
-                    f"{existing_decision}"
+                    f"This review has already been "
+                    f"completed: {existing_decision}"
                 )
 
-                if str(item["justification"]).strip():
+                if str(
+                    item["justification"]
+                ).strip():
 
-                    st.markdown("**Reviewer Justification**")
+                    st.markdown(
+                        "**Reviewer Justification**"
+                    )
 
                     st.write(
                         item["justification"]
@@ -601,26 +811,33 @@ with reviews_tab:
 
 
             # -------------------------------------------------
-            # Decision Form
+            # Review Form
             # -------------------------------------------------
 
             else:
 
                 st.divider()
 
-                st.markdown("#### Record Review Decision")
+                st.markdown(
+                    "#### Record Review Decision"
+                )
 
                 with st.form(
-                    key=f"review_form_{selected_item_id}"
+                    key=(
+                        f"review_form_"
+                        f"{selected_item_id}"
+                    )
                 ):
 
                     reviewer_name = st.text_input(
                         "Reviewer",
-                        value=str(item["reviewer"]),
+                        value=str(
+                            item["reviewer"]
+                        ),
                         help=(
-                            "The reviewer must match the person "
-                            "assigned to this review when reviewer "
-                            "enforcement is enabled."
+                            "The reviewer must match "
+                            "the person assigned to "
+                            "this review."
                         )
                     )
 
@@ -635,89 +852,75 @@ with reviews_tab:
                         item["recommendation"]
                     ).upper()
 
-                    if recommended_action in decision_options:
-                        default_decision_index = (
+                    if (
+                        recommended_action
+                        in decision_options
+                    ):
+                        default_index = (
                             decision_options.index(
                                 recommended_action
                             )
                         )
                     else:
-                        default_decision_index = 0
+                        default_index = 0
 
                     decision = st.selectbox(
                         "Decision",
                         decision_options,
-                        index=default_decision_index
+                        index=default_index
                     )
 
                     justification = st.text_area(
                         "Justification",
                         placeholder=(
-                            "Explain why this access should be "
-                            "certified, revoked, modified, or escalated."
+                            "Explain why this access "
+                            "should be certified, "
+                            "revoked, modified, or "
+                            "escalated."
                         ),
                         height=120
                     )
 
-                    submit_decision = st.form_submit_button(
-                        "Submit Decision",
-                        type="primary",
-                        use_container_width=True
+                    submit_decision = (
+                        st.form_submit_button(
+                            "Submit Decision",
+                            type="primary",
+                            use_container_width=True
+                        )
                     )
 
-
-                # -------------------------------------------------
-                # Submit Review
-                # -------------------------------------------------
 
                 if submit_decision:
 
                     try:
 
-                        review_settings = config.get(
-                            "review_settings",
-                            {}
-                        )
-
-                        enforce_reviewer = (
-                            review_settings.get(
-                                "enforce_assigned_reviewer",
-                                True
-                            )
-                        )
-
-                        event = record_decision(
-                            campaign_path=CAMPAIGN_FILE,
-                            audit_path=AUDIT_FILE,
-                            remediation_path=REMEDIATION_FILE,
+                        event = record_demo_decision(
                             item_id=selected_item_id,
                             reviewer=reviewer_name,
                             decision=decision,
-                            justification=justification,
-                            enforce_assigned_reviewer=(
-                                enforce_reviewer
-                            )
+                            justification=justification
                         )
 
                         st.success(
-                            f"{event['decision']} recorded "
-                            f"successfully for {event['item_id']}."
+                            f"{event['decision']} "
+                            f"recorded successfully for "
+                            f"{event['item_id']}."
                         )
 
-                        if event["decision"] in {
+                        if event[
+                            "decision"
+                        ] in {
                             "REVOKE",
                             "MODIFY",
                             "ESCALATE"
                         }:
 
                             st.info(
-                                "A remediation item was also added "
-                                "to the remediation queue."
+                                "A remediation item was "
+                                "also added to the "
+                                "remediation queue."
                             )
 
-                        # Reload the page so the dashboard,
-                        # campaign counts, and tables immediately
-                        # reflect the new decision.
                         st.rerun()
 
                     except ValueError as error:
@@ -726,25 +929,20 @@ with reviews_tab:
                             str(error)
                         )
 
-                    except PermissionError:
-
-                        st.error(
-                            "The campaign or output file could not "
-                            "be updated. Make sure the CSV files "
-                            "are not currently open in Excel."
-                        )
-
 
 # =========================================================
-# REMEDIATION QUEUE TAB
+# REMEDIATION QUEUE
 # =========================================================
 
 with remediation_tab:
 
-    st.subheader("Remediation Queue")
+    st.subheader(
+        "Remediation Queue"
+    )
 
     st.caption(
-        "Access changes and escalations requiring additional action."
+        "Access changes and escalations requiring "
+        "additional action."
     )
 
     if remediation_queue.empty:
@@ -755,31 +953,33 @@ with remediation_tab:
 
     else:
 
-        # -----------------------------------------------------
-        # Remediation Metrics
-        # -----------------------------------------------------
-
         total_remediation = len(
             remediation_queue
         )
 
         pending_remediation = (
-            remediation_queue["status"] == "PENDING"
+            remediation_queue["status"]
+            == "PENDING"
         ).sum()
 
         revoke_count = (
-            remediation_queue["decision"] == "REVOKE"
+            remediation_queue["decision"]
+            == "REVOKE"
         ).sum()
 
         modify_count = (
-            remediation_queue["decision"] == "MODIFY"
+            remediation_queue["decision"]
+            == "MODIFY"
         ).sum()
 
         escalate_count = (
-            remediation_queue["decision"] == "ESCALATE"
+            remediation_queue["decision"]
+            == "ESCALATE"
         ).sum()
 
-        rem1, rem2, rem3, rem4, rem5 = st.columns(5)
+        rem1, rem2, rem3, rem4, rem5 = (
+            st.columns(5)
+        )
 
         rem1.metric(
             "Total",
@@ -807,11 +1007,9 @@ with remediation_tab:
         )
 
 
-        # -----------------------------------------------------
-        # Remediation Table
-        # -----------------------------------------------------
-
-        remediation_display = remediation_queue.copy()
+        remediation_display = (
+            remediation_queue.copy()
+        )
 
         remediation_columns = [
             column
@@ -827,7 +1025,8 @@ with remediation_tab:
                 "status",
                 "dry_run"
             ]
-            if column in remediation_display.columns
+            if column
+            in remediation_display.columns
         ]
 
         st.dataframe(
@@ -851,30 +1050,36 @@ with remediation_tab:
         )
 
 
-        # -----------------------------------------------------
-        # Remediation Details
-        # -----------------------------------------------------
-
         st.divider()
 
-        st.markdown("#### Remediation Details")
+        st.markdown(
+            "#### Remediation Details"
+        )
 
         remediation_ids = (
-            remediation_queue["item_id"]
+            remediation_queue[
+                "item_id"
+            ]
             .astype(str)
             .tolist()
         )
 
-        selected_remediation_id = st.selectbox(
-            "Select remediation item",
-            remediation_ids,
-            key="remediation_item"
+        selected_remediation_id = (
+            st.selectbox(
+                "Select remediation item",
+                remediation_ids,
+                key="remediation_item"
+            )
         )
 
-        selected_remediation = remediation_queue[
-            remediation_queue["item_id"]
-            == selected_remediation_id
-        ]
+        selected_remediation = (
+            remediation_queue[
+                remediation_queue[
+                    "item_id"
+                ]
+                == selected_remediation_id
+            ]
+        )
 
         if not selected_remediation.empty:
 
@@ -910,7 +1115,9 @@ with remediation_tab:
                 )
             )
 
-            st.markdown("**Identity**")
+            st.markdown(
+                "**Identity**"
+            )
 
             st.write(
                 remediation_item.get(
@@ -919,7 +1126,9 @@ with remediation_tab:
                 )
             )
 
-            st.markdown("**Application / Access**")
+            st.markdown(
+                "**Application / Access**"
+            )
 
             st.write(
                 f"{remediation_item.get('application', '')} "
@@ -927,7 +1136,9 @@ with remediation_tab:
                 f"{remediation_item.get('access', '')}"
             )
 
-            st.markdown("**Justification**")
+            st.markdown(
+                "**Justification**"
+            )
 
             st.write(
                 remediation_item.get(
@@ -936,64 +1147,77 @@ with remediation_tab:
                 )
             )
 
-            st.markdown("**Risk Reasons**")
+            st.markdown(
+                "**Risk Reasons**"
+            )
 
-            remediation_reasons = parse_risk_reasons(
-                remediation_item.get(
-                    "risk_reasons",
-                    ""
+            remediation_reasons = (
+                parse_risk_reasons(
+                    remediation_item.get(
+                        "risk_reasons",
+                        ""
+                    )
                 )
             )
 
             for reason in remediation_reasons:
+
                 st.write(
                     f"• {reason}"
                 )
 
 
 # =========================================================
-# AUDIT HISTORY TAB
+# AUDIT HISTORY
 # =========================================================
 
 with audit_tab:
 
-    st.subheader("Audit History")
+    st.subheader(
+        "Audit History"
+    )
 
     st.caption(
-        "Recorded history of completed access review decisions."
+        "Recorded history of completed access "
+        "review decisions."
     )
 
     if audit_log.empty:
 
         st.info(
-            "No review decisions have been recorded yet."
+            "No review decisions have been "
+            "recorded yet."
         )
 
     else:
 
-        # -----------------------------------------------------
-        # Audit Metrics
-        # -----------------------------------------------------
-
-        audit_total = len(audit_log)
+        audit_total = len(
+            audit_log
+        )
 
         certify_total = (
-            audit_log["decision"] == "CERTIFY"
+            audit_log["decision"]
+            == "CERTIFY"
         ).sum()
 
         revoke_total = (
-            audit_log["decision"] == "REVOKE"
+            audit_log["decision"]
+            == "REVOKE"
         ).sum()
 
         modify_total = (
-            audit_log["decision"] == "MODIFY"
+            audit_log["decision"]
+            == "MODIFY"
         ).sum()
 
         escalate_total = (
-            audit_log["decision"] == "ESCALATE"
+            audit_log["decision"]
+            == "ESCALATE"
         ).sum()
 
-        aud1, aud2, aud3, aud4, aud5 = st.columns(5)
+        aud1, aud2, aud3, aud4, aud5 = (
+            st.columns(5)
+        )
 
         aud1.metric(
             "Total Decisions",
@@ -1021,19 +1245,22 @@ with audit_tab:
         )
 
 
-        # -----------------------------------------------------
-        # Audit Table
-        # -----------------------------------------------------
+        audit_display = (
+            audit_log.copy()
+        )
 
-        audit_display = audit_log.copy()
+        if (
+            "timestamp_utc"
+            in audit_display.columns
+        ):
 
-        # Show newest events first.
-        if "timestamp_utc" in audit_display.columns:
-
-            audit_display = audit_display.sort_values(
-                "timestamp_utc",
-                ascending=False
+            audit_display = (
+                audit_display.sort_values(
+                    "timestamp_utc",
+                    ascending=False
+                )
             )
+
 
         audit_columns = [
             column
@@ -1049,7 +1276,8 @@ with audit_tab:
                 "risk_level",
                 "justification"
             ]
-            if column in audit_display.columns
+            if column
+            in audit_display.columns
         ]
 
         st.dataframe(
@@ -1064,41 +1292,45 @@ with audit_tab:
                 "identity_name": "Identity",
                 "application": "Application",
                 "access": "Access",
-                "assigned_reviewer": "Assigned Reviewer",
+                "assigned_reviewer":
+                    "Assigned Reviewer",
                 "reviewed_by": "Reviewed By",
                 "decision": "Decision",
                 "risk_level": "Risk",
-                "justification": "Justification"
+                "justification":
+                    "Justification"
             }
         )
 
 
-        # -----------------------------------------------------
-        # Audit Event Details
-        # -----------------------------------------------------
-
         st.divider()
 
-        st.markdown("#### Audit Event Details")
+        st.markdown(
+            "#### Audit Event Details"
+        )
 
         audit_options = list(
             audit_display.index
         )
 
-        selected_audit_index = st.selectbox(
-            "Select audit event",
-            audit_options,
-            format_func=lambda index: (
-                f"{audit_display.loc[index, 'item_id']} | "
-                f"{audit_display.loc[index, 'decision']} | "
-                f"{audit_display.loc[index, 'identity_name']}"
-            ),
-            key="audit_event"
+        selected_audit_index = (
+            st.selectbox(
+                "Select audit event",
+                audit_options,
+                format_func=lambda index: (
+                    f"{audit_display.loc[index, 'item_id']} | "
+                    f"{audit_display.loc[index, 'decision']} | "
+                    f"{audit_display.loc[index, 'identity_name']}"
+                ),
+                key="audit_event"
+            )
         )
 
-        audit_event = audit_display.loc[
-            selected_audit_index
-        ]
+        audit_event = (
+            audit_display.loc[
+                selected_audit_index
+            ]
+        )
 
         audit_detail1, audit_detail2, audit_detail3 = (
             st.columns(3)
@@ -1128,7 +1360,9 @@ with audit_tab:
             )
         )
 
-        st.markdown("**Identity**")
+        st.markdown(
+            "**Identity**"
+        )
 
         st.write(
             audit_event.get(
@@ -1137,7 +1371,9 @@ with audit_tab:
             )
         )
 
-        st.markdown("**Application / Access**")
+        st.markdown(
+            "**Application / Access**"
+        )
 
         st.write(
             f"{audit_event.get('application', '')} "
@@ -1145,7 +1381,9 @@ with audit_tab:
             f"{audit_event.get('access', '')}"
         )
 
-        st.markdown("**Justification**")
+        st.markdown(
+            "**Justification**"
+        )
 
         st.write(
             audit_event.get(
@@ -1154,18 +1392,23 @@ with audit_tab:
             )
         )
 
-        st.markdown("**Risk Reasons**")
+        st.markdown(
+            "**Risk Reasons**"
+        )
 
-        audit_reasons = parse_risk_reasons(
-            audit_event.get(
-                "risk_reasons",
-                ""
+        audit_reasons = (
+            parse_risk_reasons(
+                audit_event.get(
+                    "risk_reasons",
+                    ""
+                )
             )
         )
 
         if audit_reasons:
 
             for reason in audit_reasons:
+
                 st.write(
                     f"• {reason}"
                 )
@@ -1173,5 +1416,6 @@ with audit_tab:
         else:
 
             st.write(
-                "No elevated risk conditions were recorded."
+                "No elevated risk conditions "
+                "were recorded."
             )
