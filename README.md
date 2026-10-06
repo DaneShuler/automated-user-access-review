@@ -97,6 +97,16 @@ The example campaign includes all four possible outcomes:
 
 ---
 
+## How This Relates to Existing IAM Platforms
+
+This proof of concept is not intended to replace the access review and certification capabilities already available in identity governance platforms such as Saviynt.
+
+Instead, I built it to explore the full User Access Review workflow and how information from multiple identity sources could be brought together, prioritized, assigned for review, and tracked through remediation and audit history.
+
+In a production environment, many of these functions could remain within the organization's existing identity governance platform. The automation layer would depend on the existing environment and could focus on areas such as data integration, campaign preparation, reviewer assignment, exception handling, remediation, and reporting.
+
+The connectors in this project are intentionally separated from the review logic so the synthetic CSV sources could be replaced with real integrations without redesigning the entire workflow.
+
 ## How It Works
 
 The program starts with four sets of information:
