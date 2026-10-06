@@ -1,146 +1,74 @@
 # Automated User Access Review
 
-This is a proof-of-concept I built to explore how parts of the User Access Review process could be automated.
+This is a proof of concept I built to explore how parts of the User Access Review process could be automated.
 
-The goal is to take identity and access information from multiple sources, organize it into a review campaign, identify access that may need extra attention, assign the appropriate reviewer, and track decisions through remediation and audit history.
+The project brings identity and access information from multiple sources into a review campaign, identifies access that may deserve additional attention, assigns an appropriate reviewer, and tracks decisions through remediation and audit history.
 
-The project includes both a command-line interface and a Streamlit web dashboard where reviewers can investigate access and record review decisions.
+It includes both a command-line workflow and an interactive Streamlit dashboard.
 
-> **Important:** All identities, accounts, applications, access assignments, and policies in this repository are synthetic. No real company or user data is used.
+> **Important:** All identities, accounts, applications, access assignments, policies, and review records in this repository are synthetic. No real company or user data is used.
 
 ---
 
 ## Live Demo
 
-The User Access Review dashboard is available as a hosted Streamlit demo:
-
 ### [Open the Live UAR Demo](https://automated-user-access-review.streamlit.app/)
 
-The hosted application runs as an isolated demonstration environment. All identities, applications, access assignments, and review information are synthetic.
+The hosted Streamlit application runs as an isolated demonstration environment. Each visitor receives their own session, so review decisions can be submitted and the workflow can be tested without modifying the repository or affecting other users.
 
-Each visitor receives their own demo session, so review decisions can be submitted without modifying the repository or affecting other users. The demo can also be reset to its original state at any time.
-
-The application does not connect to or modify any production identity systems.
+The demo can be reset to its original state at any time and does not connect to or modify any production identity systems.
 
 ---
 
 ## Dashboard
 
-I built a Streamlit dashboard on top of the review process so the campaign can be worked through like an actual access review instead of only viewing generated CSV files.
-
-The dashboard includes:
-
-- Campaign progress and risk totals
-- Filtering by risk, application, identity type, reviewer, and review status
-- Individual access review details
-- Explanations showing why access was flagged
-- Reviewer assignment and authorization
-- CERTIFY, REVOKE, MODIFY, and ESCALATE decisions
-- Remediation tracking
-- Audit history
-- Isolated demo sessions
-- Demo reset functionality
-
 ### Access Review Campaign
 
 ![Access Review Dashboard](screenshots/access-reviews.png)
 
-The main dashboard provides an overview of the current campaign. Reviews are prioritized by risk and can be filtered by risk level, application, identity type, assigned reviewer, or completion status.
+The campaign dashboard prioritizes access reviews by risk and supports filtering by risk level, application, identity type, assigned reviewer, and review status.
 
-This makes it possible to quickly narrow a large campaign down to the access that deserves attention first.
-
-### Reviewing an Access Item
+### Individual Access Review
 
 ![Individual Access Review](screenshots/review-details.png)
 
-Selecting an item opens the individual review workspace.
+Selecting an item shows the identity, application, entitlement, risk score, assigned reviewer, recommended action, and the individual conditions that contributed to the risk score.
 
-The reviewer can see:
-
-- Who or what has the access
-- The application and entitlement being reviewed
-- Risk score and risk level
-- Assigned reviewer
-- Recommended action
-- Each condition that contributed to the risk score
-
-For example, a terminated employee who still has an active account can be assigned a **CRITICAL** risk level with a recommended action of **REVOKE**.
-
-The assigned reviewer can then choose **CERTIFY**, **REVOKE**, **MODIFY**, or **ESCALATE** and must provide a justification before submitting the decision.
+Reviewers can **CERTIFY**, **REVOKE**, **MODIFY**, or **ESCALATE** access and must provide a justification for the decision.
 
 ### Remediation Queue
 
 ![Remediation Queue](screenshots/remediation-queue.png)
 
-Decisions that require additional action are sent to a separate remediation queue.
+REVOKE, MODIFY, and ESCALATE decisions are placed into a separate remediation queue instead of immediately changing access.
 
-A **REVOKE**, **MODIFY**, or **ESCALATE** decision creates a remediation item containing the original access information, reviewer decision, justification, risk level, and reasons the access was flagged.
-
-The proof of concept intentionally operates in dry-run mode. It demonstrates where an automated remediation process could continue without making changes to a real identity system.
+The proof of concept operates in dry-run mode, demonstrating where remediation could continue without making changes to a real identity system.
 
 ### Audit History
 
 ![Audit History](screenshots/audit-history.png)
 
-Every completed review is also recorded in the audit history.
-
-The audit trail records the assigned reviewer, person who completed the review, decision, justification, identity, application, access, risk information, and timestamp.
-
-This provides evidence of both the original access review and the human decision that followed it.
-
-The example campaign includes all four possible outcomes:
-
-- **CERTIFY** for access that remains appropriate
-- **REVOKE** for access that should be removed
-- **MODIFY** for access that needs to be changed
-- **ESCALATE** when additional investigation or approval is needed
+Every completed review creates an audit record containing the identity, access, reviewer, decision, justification, risk information, and timestamp.
 
 ---
-
-## How This Relates to Existing IAM Platforms
-
-This proof of concept is not intended to replace the access review and certification capabilities already available in identity governance platforms such as Saviynt.
-
-Instead, I built it to explore the full User Access Review workflow and how information from multiple identity sources could be brought together, prioritized, assigned for review, and tracked through remediation and audit history.
-
-In a production environment, many of these functions could remain within the organization's existing identity governance platform. The automation layer would depend on the existing environment and could focus on areas such as data integration, campaign preparation, reviewer assignment, exception handling, remediation, and reporting.
-
-The connectors in this project are intentionally separated from the review logic so the synthetic CSV sources could be replaced with real integrations without redesigning the entire workflow.
 
 ## How It Works
 
-The program starts with four sets of information:
+The proof of concept combines four sources of information:
 
-- Employee information, including department, manager, and employment status
-- Employee application access, similar to information that could come from Saviynt
-- Service accounts and other non-human identities, similar to information that could come from Oasis
-- Application information, including application owners and review requirements
+- Employee and workforce information
+- Human identity and access information
+- Service accounts and other non-human identities
+- Application ownership and review information
 
-The program combines this information and looks for situations that may deserve additional attention.
-
-Examples include:
-
-- A terminated employee who still has active access
-- High-risk or critical access
-- Access to applications covered by SOX controls
-- Accounts that have not been used recently
-- Service accounts owned by terminated employees
-- Highly privileged service accounts
-- Old credentials that may need to be rotated
-- Production service accounts that deserve additional review
-
-Each access item receives a risk score and an explanation showing why it was flagged. The program then determines who should review the access and creates the User Access Review campaign.
-
----
-
-## Review Workflow
+The program normalizes this information, evaluates access using configurable risk rules, assigns reviewers, and creates a User Access Review campaign.
 
 ```text
 Employee / HR Information ───────┐
                                  │
-Employee Access / Saviynt ───────┤
+Human Access / Saviynt ──────────┤
                                  │
-Service Accounts / Oasis ────────┼──> Normalize Access
+Non-Human Identities / Oasis ────┼──> Normalize Access
                                  │          │
 Application Information ─────────┘          ↓
                                        Risk Scoring
@@ -151,78 +79,49 @@ Application Information ─────────┘          ↓
                                             ↓
                                     User Access Review
                                             │
-                       ┌────────────────────┼────────────────────┐
-                       │                    │                    │
-                    CERTIFY           REVOKE / MODIFY         ESCALATE
-                       │                    │                    │
-                       │                    └─────────┬──────────┘
-                       │                              ↓
-                       │                      Remediation Queue
-                       │                              │
-                       └──────────────┬───────────────┘
-                                      ↓
-                                  Audit History
+                         ┌──────────────────┼──────────────────┐
+                         │                  │                  │
+                      CERTIFY       REVOKE / MODIFY         ESCALATE
+                         │                  │                  │
+                         │                  └────────┬─────────┘
+                         │                           ↓
+                         │                   Remediation Queue
+                         │                           │
+                         └─────────────┬─────────────┘
+                                       ↓
+                                   Audit History
 ```
 
-One of the main design choices I made was keeping the review decision separate from the actual access change.
-
-For example, choosing **REVOKE** does not immediately remove someone's access. Instead, it creates a remediation item that can be reviewed and processed separately.
-
-This helps prevent an automated process from making a potentially disruptive access change without the proper checks in place.
+One of the main design choices was keeping the review decision separate from the access change. A reviewer selecting REVOKE does not immediately remove access. Instead, the decision creates remediation work that can be processed separately.
 
 ---
 
-## Review Decisions
+## How This Relates to Existing IAM Platforms
 
-A reviewer can make one of four decisions:
+This proof of concept is not intended to replace the access review and certification capabilities already available in identity governance platforms such as Saviynt.
 
-- **CERTIFY:** The access is still appropriate.
-- **REVOKE:** The access should be removed.
-- **MODIFY:** The access should be changed.
-- **ESCALATE:** Additional investigation or approval is needed.
+Instead, I built it to explore the complete User Access Review workflow and how information from multiple identity sources could be brought together, prioritized, assigned for review, and tracked through remediation and audit history.
 
-Every decision requires a justification.
+In a production environment, many of these functions could remain within the organization's existing identity governance platform. The automation needed would depend on the existing environment and could focus on areas such as data integration, campaign preparation, reviewer assignment, exception handling, remediation, and reporting.
 
-The program also verifies that the person submitting the decision is the reviewer assigned to that access item. Once an item has been reviewed, duplicate decisions are prevented.
-
-### Example Review Flow
-
-A typical review looks like this:
-
-1. Access information is collected from the synthetic source systems.
-2. The risk engine evaluates the access.
-3. The campaign assigns an appropriate reviewer.
-4. The reviewer investigates why the access was flagged.
-5. The reviewer records a decision and justification.
-6. The decision is written to the audit history.
-7. REVOKE, MODIFY, and ESCALATE decisions also enter the remediation queue.
-
-This keeps the risk assessment, human decision, and remediation steps separate while maintaining a record of the entire process.
+The connectors in this project are intentionally separated from the review logic so the synthetic CSV sources could be replaced with real integrations without redesigning the entire workflow.
 
 ---
 
-## Risk Scoring
+## Key Features
 
-Risk scoring helps reviewers prioritize which access deserves attention first.
+### Risk-Based Prioritization
 
-For example, an active employee with standard access may receive little or no additional risk, while a terminated employee who still has active high-risk access will be pushed toward the top of the campaign.
-
-### Human Access Risk Factors
-
-The current human access rules consider factors such as:
+Human access is evaluated using factors such as:
 
 - Employment status
-- Whether an account remains active
-- Access risk level
+- Active access belonging to terminated employees
 - Critical or high-risk entitlements
 - SOX-controlled access
 - Last login activity
 
-### Service Account Risk Factors
+Service accounts and other non-human identities are evaluated using factors such as:
 
-Service and other non-human identity rules consider factors such as:
-
-- Owner employment status
 - Missing or terminated ownership
 - Privilege level
 - Production usage
@@ -230,171 +129,81 @@ Service and other non-human identity rules consider factors such as:
 - Credential rotation requirements
 - Last account usage
 
-Each applicable condition contributes to the item's risk score and is also stored as a readable risk reason.
+Each applicable condition contributes to a risk score and is also recorded as a readable reason.
 
 For example:
 
 ```text
 terminated employee retains active access
-stale login (121 days)
+high-risk entitlement
+SOX-controlled access
+stale login (131 days)
 ```
 
-or:
+Risk scores prioritize reviews but never automatically certify or revoke access.
 
-```text
-terminated or missing owner
-high privilege
-production identity
-credential age 380 days
-credential rotation required
-stale usage (120 days)
-```
+### Reviewer Assignment
 
-The risk score does **not** automatically determine whether access should remain or be removed.
+Reviews are routed based on the type and risk of the access. Depending on the situation, a review can be assigned to an employee's manager, an application owner, or IAM.
 
-The final decision is still made by an authorized reviewer.
+The assigned reviewer is enforced when a decision is submitted. An unauthorized reviewer cannot complete someone else's assigned review.
 
-The scoring values in this project are demonstration policies created for the proof of concept and are not presented as industry-standard thresholds.
+### Review Decisions
 
----
+Reviewers can choose:
 
-## Reviewer Assignment
+- **CERTIFY:** Access remains appropriate
+- **REVOKE:** Access should be removed
+- **MODIFY:** Access should be changed
+- **ESCALATE:** Additional investigation or approval is needed
 
-Reviewer assignment changes depending on the access being reviewed.
+Every decision requires a justification, and completed reviews cannot be submitted a second time.
 
-For example:
-
-- Critical access can be routed to an IAM reviewer
-- High-risk or SOX-related access can be routed to the application owner
-- Lower-risk employee access can be routed to the employee's manager
-- Service accounts can be routed based on application ownership or account ownership
-
-The assigned reviewer is enforced when a decision is submitted.
-
-If another person attempts to complete an assigned review, the program rejects the decision.
-
-This helps demonstrate how reviewer assignment could be enforced rather than simply being informational.
-
----
-
-## Remediation
-
-Items marked **REVOKE**, **MODIFY**, or **ESCALATE** are added to the remediation queue.
-
-The queue includes information such as:
-
-- Identity
-- Application
-- Access
-- Requested action
-- Reviewer
-- Justification
-- Risk information
-- Remediation status
-- Dry-run status
-
-The current project does not automatically execute the requested access change.
-
-Instead, remediation items remain **PENDING** and are marked as dry-run actions.
-
-This was an intentional design decision. A production implementation could later replace the dry-run step with integrations to the appropriate identity or application systems while preserving the review and audit workflow.
-
----
-
-## Audit History
-
-Every completed review creates an audit event containing information such as:
-
-- Identity being reviewed
-- Application and access
-- Assigned reviewer
-- Person who completed the review
-- Decision
-- Justification
-- Risk score
-- Risk level
-- Reasons the access was flagged
-- Timestamp
+### Remediation and Audit Evidence
 
 CERTIFY decisions are recorded in the audit history without creating remediation work.
 
-This provides a historical record of who reviewed access, what they decided, and why they made that decision.
+REVOKE, MODIFY, and ESCALATE decisions are recorded in the audit history and added to the remediation queue.
 
----
-
-## Demo Environment
-
-The hosted Streamlit version is intentionally separated from the persistent local workflow.
-
-When a visitor opens the hosted application, the baseline demonstration data is copied into that visitor's Streamlit session.
-
-```text
-                    GitHub Repository
-                           │
-               ┌───────────┴───────────┐
-               │                       │
-               ↓                       ↓
-          Local Project          Streamlit Demo
-               │                       │
-               ↓                       ↓
-          output/*.csv            demo/*.csv
-               │                       │
-        Persistent local         Copied into each
-            workflow             visitor's session
-               │                       │
-               ↓                       ↓
-          main.py / CLI           app.py / Web UI
-               │                       │
-               ↓                       ↓
-         Audit + Queue           Audit + Queue
-         written to disk         temporary only
-```
-
-This allows visitors to:
-
-- Submit review decisions
-- Test reviewer authorization
-- Add items to the remediation queue
-- View changes in the audit history
-- Reset the demonstration to its original state
-
-Changes made through the hosted application exist only within that visitor's session and do not modify the baseline data in GitHub.
-
-The local command-line workflow remains CSV-backed so the persistent output of the proof of concept can still be inspected.
+This keeps risk assessment, human approval, and access remediation separate while maintaining evidence of the complete review process.
 
 ---
 
 ## Example Data
 
-The project currently generates:
+The project generates:
 
-- 50 employees
-- 200 employee access assignments
-- 40 service accounts and other non-human identities
-- Several applications with different owners and security requirements
+- 50 synthetic employees
+- 200 synthetic employee access assignments
+- 40 synthetic service accounts and other non-human identities
+- Application ownership and review metadata
 
-Some problems are deliberately included in the synthetic data so the program has realistic scenarios to identify.
+Several problems are deliberately planted in the generated data so the workflow has realistic scenarios to identify.
 
-Examples include a terminated employee who still has active application access and a privileged service account that is still owned by a terminated employee.
+Examples include:
 
-The repository also includes example output from a completed test workflow.
+- A terminated employee retaining active access
+- High-risk and SOX-controlled access
+- Stale employee access
+- A service account owned by a terminated employee
+- Privileged production identities
+- Old credentials requiring rotation
+- Stale service account usage
 
-The sample results demonstrate **CERTIFY**, **REVOKE**, **MODIFY**, and **ESCALATE** decisions, along with the resulting audit history and remediation queue.
-
-This makes it possible to review the full workflow without running the project first.
+The repository also contains example campaign, remediation, and audit output so the results can be reviewed without running the project first.
 
 ---
 
-## Running the Project Locally
+## Running Locally
 
-### 1. Clone the Repository
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/DaneShuler/automated-user-access-review.git
 cd automated-user-access-review
 ```
 
-### 2. Create a Virtual Environment
+### 2. Create a virtual environment
 
 Windows:
 
@@ -410,65 +219,55 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### 3. Install Requirements
+### 3. Install dependencies
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-### 4. Generate Synthetic Data
+### 4. Generate synthetic data
 
 ```bash
 python main.py generate
 ```
 
-This creates the example employee, application, human access, and service account data.
-
-### 5. Create the Review Campaign
+### 5. Create the review campaign
 
 ```bash
 python main.py campaign
 ```
 
-The generated campaign is written to:
-
-```text
-output/review_campaign.csv
-```
-
-### 6. Start the Dashboard
+### 6. Start the dashboard
 
 ```bash
 python -m streamlit run app.py
 ```
 
-Streamlit will provide a local address and open the User Access Review dashboard in a web browser.
-
 ---
 
 ## Command-Line Interface
 
-The project can also be used from the command line.
+The same workflow can also be used without the dashboard.
 
-### Generate Example Data
+Generate synthetic data:
 
 ```bash
 python main.py generate
 ```
 
-### Create a Review Campaign
+Create the campaign:
 
 ```bash
 python main.py campaign
 ```
 
-### Record a Decision
+Record a review decision:
 
 ```bash
 python main.py decide --item-id H-A0001 --reviewer "Dane Shuler" --decision REVOKE --justification "Employee is terminated and should no longer retain active access."
 ```
 
-The command-line interface uses the persistent local CSV workflow, while the hosted Streamlit application uses isolated demonstration sessions.
+The command-line workflow writes persistent results to the `output/` directory. The hosted Streamlit version instead uses isolated session data so visitors can safely interact with the demo.
 
 ---
 
@@ -481,7 +280,6 @@ automated-user-access-review/
 ├── main.py
 ├── config.json
 ├── requirements.txt
-├── README.md
 │
 ├── data/
 │   ├── employees.csv
@@ -500,13 +298,8 @@ automated-user-access-review/
 │   └── remediation_queue.csv
 │
 ├── screenshots/
-│   ├── access-reviews.png
-│   ├── review-details.png
-│   ├── remediation-queue.png
-│   └── audit-history.png
 │
 ├── src/
-│   ├── __init__.py
 │   ├── campaign.py
 │   ├── connectors.py
 │   ├── generate_data.py
@@ -517,53 +310,28 @@ automated-user-access-review/
     └── test_risk_engine.py
 ```
 
-### `app.py`
+### Main Components
 
-Provides the Streamlit web interface for viewing the campaign, investigating individual access items, recording decisions, reviewing remediation work, and viewing audit history.
+**`app.py`**  
+Interactive Streamlit interface for reviewing access, recording decisions, viewing remediation work, and inspecting audit history.
 
-The hosted application uses Streamlit session state so each visitor receives an isolated demonstration environment.
+**`main.py`**  
+Command-line interface for generating data, creating campaigns, and recording review decisions.
 
-### `main.py`
+**`src/connectors.py`**  
+Defines the boundaries between the review workflow and its data sources. The proof of concept uses CSV files, but these connectors could be replaced with real integrations.
 
-Provides the command-line interface for generating data, creating campaigns, and recording decisions.
+**`src/risk_engine.py`**  
+Evaluates human and non-human identity access using configurable risk rules and records the reasons contributing to each score.
 
-### `src/generate_data.py`
+**`src/campaign.py`**  
+Combines source information, calculates risk, assigns reviewers, provides recommendations, and creates the review campaign.
 
-Creates the synthetic employees, access assignments, applications, and service accounts used by the proof of concept.
+**`src/review.py`**  
+Handles review decisions, reviewer authorization, duplicate-review prevention, remediation queue creation, and audit evidence.
 
-The generator also deliberately creates several access problems so the risk and review workflow can be demonstrated consistently.
-
-### `src/connectors.py`
-
-Provides the interface between the review process and its data sources.
-
-The current connectors read CSV files, but they are separated from the rest of the review logic so they could later be replaced with integrations that retrieve information from identity platforms, HR systems, or other sources.
-
-### `src/risk_engine.py`
-
-Evaluates human and service account access for potential concerns and calculates risk scores.
-
-It also records the reasons behind each score so reviewers can understand why an item was prioritized.
-
-### `src/campaign.py`
-
-Combines the different sources of information, calculates risk, assigns reviewers, provides recommendations, and creates the User Access Review campaign.
-
-### `src/review.py`
-
-Handles reviewer decisions, reviewer authorization, duplicate-review prevention, audit history, and remediation queue creation for the persistent local workflow.
-
-### `config.json`
-
-Contains configurable risk rules, scoring values, thresholds, IAM reviewer settings, and other review behavior.
-
-### `demo/`
-
-Contains the baseline campaign, audit history, and remediation queue used to initialize isolated Streamlit demonstration sessions.
-
-### `output/`
-
-Contains example persistent output from the command-line workflow so the results can be inspected without running the project.
+**`config.json`**  
+Contains configurable risk rules, thresholds, and review settings.
 
 ---
 
@@ -575,104 +343,52 @@ Run the automated tests with:
 python -m pytest -q
 ```
 
-The automated test suite verifies important risk and review behavior.
+The project tests important behaviors including human and non-human identity risk scoring, reviewer authorization, duplicate decision prevention, audit logging, and remediation queue creation.
 
-The complete workflow has also been tested for:
-
-- Authorized reviewer decisions
-- Unauthorized reviewer rejection
-- Duplicate decision prevention
-- CERTIFY decisions
-- REVOKE decisions
-- MODIFY decisions
-- ESCALATE decisions
-- Audit log creation
-- Remediation queue creation
-- Human identity risk scoring
-- Service account risk scoring
-- Streamlit session isolation
-- Demo reset behavior
+A GitHub Actions workflow runs the test suite automatically when changes are pushed.
 
 ---
 
-## Security and Safety Design
+## Design and Safety Choices
 
-Several parts of the project are intentionally designed to avoid allowing automation to make unchecked access decisions.
+A few safeguards were intentional:
 
-### Human Decision Required
+- Risk scores prioritize reviews but do not make access decisions automatically.
+- Review decisions require human input and written justification.
+- The assigned reviewer is enforced.
+- Duplicate review decisions are rejected.
+- Review approval and remediation are separate steps.
+- Remediation remains in dry-run mode.
+- The public demo uses isolated sessions and does not modify production systems or repository data.
 
-Risk scores prioritize access for review but do not automatically certify or revoke access.
-
-### Reviewer Authorization
-
-The person submitting a decision must match the reviewer assigned to the item.
-
-### Justification Required
-
-Every review decision requires a written justification.
-
-### Duplicate Review Prevention
-
-Once a decision has been recorded, the same review item cannot be completed a second time.
-
-### Review and Remediation Are Separate
-
-REVOKE, MODIFY, and ESCALATE decisions create remediation work instead of immediately changing access.
-
-### Dry-Run Remediation
-
-The current remediation queue does not connect to or modify real identity systems.
-
-### Isolated Hosted Sessions
-
-The public Streamlit application keeps each visitor's demonstration activity isolated from other visitors and from the repository's baseline data.
-
-These controls keep the proof of concept focused on assisting the review process while leaving final access decisions with people.
+The goal is to automate the repetitive parts of the review process while keeping consequential access decisions controlled and auditable.
 
 ---
 
-## Current Limitations
+## Current Limitations and Future Improvements
 
-This project is a proof of concept and intentionally does not connect to production identity systems.
+This is a proof of concept rather than a production identity governance system.
 
-The current version:
+The current version uses synthetic CSV data, demonstration risk policies, and simulated remediation. It does not authenticate dashboard users, execute real access changes, send review notifications, or connect to production identity systems.
 
-- Uses synthetic CSV data instead of live APIs
-- Does not make real access changes
-- Uses demonstration risk policies
-- Does not authenticate users into the dashboard
-- Does not send notifications or reminders
-- Does not automatically verify that remediation was completed
-- Does not represent the exact data structure or implementation of any specific company's identity environment
+Potential next steps could include:
 
-These limitations are intentional so the complete review and remediation workflow can be demonstrated safely.
-
----
-
-## Future Improvements
-
-Potential next steps include:
-
-- Direct integrations with identity platforms instead of CSV files
-- HR system integration
-- Email or Teams notifications when reviews are assigned
-- Reminders and escalation for overdue reviews
-- Additional approval requirements for high-risk or SOX access
+- Real identity and HR system integrations
+- Automated campaign creation and scheduling
+- Email or Teams review notifications
+- Review deadlines, reminders, and escalations
 - Separation of Duties checks
-- Campaign due dates and review periods
-- Remediation status tracking
-- Verification that requested access changes were completed
+- Additional approval requirements for sensitive access
+- Remediation status tracking and verification
+- Authentication and role-based dashboard access
 - Additional reporting and campaign analytics
-- Authentication and role-based access to the dashboard
-
-The connector-based structure is intended to make it possible to replace the synthetic sources with real integrations without rebuilding the entire review workflow.
 
 ---
 
-## Purpose
+## Why I Built This
 
 I built this project after discussing User Access Review automation as a real IAM challenge.
 
-The goal was not to recreate a full identity governance platform. Instead, I wanted to explore how I would approach the problem from end to end: bringing identity information together, identifying risky access, prioritizing reviews, assigning responsibility, capturing human decisions, separating remediation from approval, and maintaining audit evidence.
+Rather than attempting to recreate a full identity governance platform, I wanted to understand the problem from end to end: bringing identity information together, identifying potentially risky access, assigning responsibility, capturing human decisions, separating approval from remediation, and maintaining audit evidence.
 
-The project is designed so the synthetic data sources could eventually be replaced with real integrations while keeping the risk, campaign, review, remediation, and audit workflow largely the same.
+The result is a small, vendor-aware proof of concept that demonstrates how I would begin approaching the workflow while leaving the specific integrations, policies, and implementation details dependent on the organization's existing IAM environment.
