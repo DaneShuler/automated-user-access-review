@@ -1,0 +1,6 @@
+application,owner,criticality,sox,review_frequency_days
+SAP,Maria Lopez,Critical,Yes,90
+Active Directory,David Reed,Critical,No,90
+Salesforce,Emily Parker,High,No,180
+FinanceDB,Maria Lopez,Critical,Yes,90
+LoanAPI,David Reed,Critical,No,90

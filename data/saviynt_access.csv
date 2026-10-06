@@ -1,0 +1,201 @@
+account_id,employee_id,application,account_name,entitlement,role,risk_level,sox,last_login,account_status,access_granted_date
+A0001,E1050,SAP,ccarter,Vendor_Create,Manager,High,Yes,2026-06-20,Active,2024-09-23
+A0002,E1047,LoanAPI,mbrown,Loan_Operator,Cloud Engineer,High,No,2026-08-28,Active,2026-02-24
+A0003,E1019,Active Directory,cwright,Standard User,Credit Analyst,Low,No,2026-09-22,Active,2025-01-21
+A0004,E1048,SAP,scarter,Finance_Read,Underwriter,Medium,Yes,2026-07-18,Active,2026-07-10
+A0005,E1004,LoanAPI,jbrown,Loan_Operator,Operations Analyst,High,No,2026-05-31,Active,2025-03-12
+A0006,E1011,SAP,sking,Finance_Read,Cloud Engineer,Medium,Yes,2026-05-29,Active,2026-06-16
+A0007,E1012,SAP,myoung,Vendor_Create,Credit Analyst,High,Yes,2026-09-19,Active,2024-10-15
+A0008,E1016,FinanceDB,mparker,Finance_Admin,Operations Analyst,High,Yes,2026-09-06,Active,2025-01-31
+A0009,E1016,SAP,mparker,Finance_Read,Operations Analyst,Medium,Yes,2026-09-16,Active,2025-07-04
+A0010,E1043,Salesforce,syoung,Loan_Admin,System Administrator,High,No,2026-08-01,Active,2026-02-09
+A0011,E1043,Salesforce,syoung,Loan_Admin,System Administrator,High,No,2026-08-06,Active,2025-12-09
+A0012,E1026,Active Directory,ekim,Domain Admin,Security Engineer,Critical,No,2026-07-22,Active,2025-05-26
+A0013,E1021,SAP,cclark,Vendor_Create,Operations Specialist,High,Yes,2026-10-04,Active,2025-05-25
+A0014,E1040,SAP,smartin,Vendor_Create,Accountant,High,Yes,2026-09-18,Active,2025-03-05
+A0015,E1014,Salesforce,mwilson,Loan_Read,AP Analyst,Low,No,2026-09-03,Active,2025-09-14
+A0016,E1005,Active Directory,mlopez,Standard User,Operations Specialist,Low,No,2026-07-04,Active,2025-11-19
+A0017,E1011,LoanAPI,sking,Loan_Operator,Cloud Engineer,High,No,2026-05-20,Active,2024-09-16
+A0018,E1020,SAP,mhall,Finance_Read,Security Analyst,Medium,Yes,2026-05-18,Active,2025-11-04
+A0019,E1043,SAP,syoung,Vendor_Create,System Administrator,High,Yes,2026-09-02,Active,2025-12-10
+A0020,E1008,SAP,jcarter,Vendor_Create,Operations Specialist,High,Yes,2026-05-18,Active,2026-03-31
+A0021,E1018,Salesforce,chall,Loan_Read,Help Desk Analyst,Low,No,2026-08-14,Active,2024-09-02
+A0022,E1022,Active Directory,mkim,Standard User,Help Desk Analyst,Low,No,2026-07-31,Active,2025-04-07
+A0023,E1032,Salesforce,mwright,Loan_Read,System Administrator,Low,No,2026-09-23,Active,2026-06-04
+A0024,E1041,FinanceDB,jwilson,Finance_Admin,Loan Officer,High,Yes,2026-07-28,Active,2026-07-23
+A0025,E1001,Salesforce,cdavis,Loan_Admin,Financial Analyst,High,No,2026-09-03,Active,2024-11-23
+A0026,E1017,Active Directory,jparker,Domain Admin,System Administrator,Critical,No,2026-06-15,Active,2025-02-19
+A0027,E1046,FinanceDB,mmartin,Finance_Admin,System Administrator,High,Yes,2026-05-16,Active,2026-08-28
+A0028,E1008,SAP,jcarter,Vendor_Create,Operations Specialist,High,Yes,2026-08-29,Active,2025-02-25
+A0029,E1003,Salesforce,akim,Loan_Admin,Loan Officer,High,No,2026-05-10,Active,2025-02-18
+A0030,E1010,FinanceDB,tbrown,Finance_Admin,Operations Specialist,High,Yes,2026-09-04,Active,2026-07-26
+A0031,E1020,Salesforce,mhall,Loan_Admin,Security Analyst,High,No,2026-09-26,Active,2025-09-05
+A0032,E1014,Active Directory,mwilson,Standard User,AP Analyst,Low,No,2026-09-10,Active,2025-09-09
+A0033,E1050,FinanceDB,jreed,Finance_Admin,Loan Officer,High,Yes,2026-08-28,Active,2026-01-07
+A0034,E1011,Active Directory,sking,Domain Admin,Cloud Engineer,Critical,No,2026-06-23,Active,2026-08-12
+A0035,E1012,Salesforce,myoung,Loan_Admin,Credit Analyst,High,No,2026-06-23,Active,2024-06-07
+A0036,E1043,Active Directory,syoung,Standard User,System Administrator,Low,No,2026-07-30,Active,2026-03-27
+A0037,E1045,SAP,dhall,Vendor_Create,Financial Analyst,High,Yes,2026-07-01,Active,2026-07-29
+A0038,E1031,Active Directory,cparker,Standard User,Financial Analyst,Low,No,2026-08-16,Active,2024-05-23
+A0039,E1030,Salesforce,ccarter,Loan_Admin,Manager,High,No,2026-07-20,Active,2024-05-19
+A0040,E1015,Active Directory,ddavis,Standard User,Cloud Engineer,Low,No,2026-09-30,Active,2024-10-31
+A0041,E1013,FinanceDB,myoung,Finance_Admin,IAM Analyst,High,Yes,2026-07-14,Active,2025-11-25
+A0042,E1005,Salesforce,mlopez,Loan_Read,Operations Specialist,Low,No,2026-07-09,Active,2024-11-19
+A0043,E1033,FinanceDB,jmartin,Finance_Admin,Loan Officer,High,Yes,2026-05-22,Active,2025-10-02
+A0044,E1002,SAP,cwright,Vendor_Create,AP Analyst,High,Yes,2026-08-01,Active,2026-03-08
+A0045,E1038,Salesforce,tmartin,Loan_Read,Security Analyst,Low,No,2026-09-27,Active,2026-05-18
+A0046,E1039,FinanceDB,cyoung,Finance_Admin,Financial Analyst,High,Yes,2026-07-10,Active,2024-08-21
+A0047,E1021,FinanceDB,cclark,Finance_Admin,Operations Specialist,High,Yes,2026-05-29,Active,2026-05-11
+A0048,E1025,Active Directory,mhall,Standard User,Operations Analyst,Low,No,2026-08-02,Active,2026-07-23
+A0049,E1046,FinanceDB,mmartin,Finance_Admin,System Administrator,High,Yes,2026-10-06,Active,2025-03-23
+A0050,E1035,Active Directory,cmartin,Standard User,Loan Officer,Low,No,2026-07-05,Active,2025-06-22
+A0051,E1005,Salesforce,mlopez,Loan_Admin,Operations Specialist,High,No,2026-07-18,Active,2024-10-27
+A0052,E1008,Salesforce,jcarter,Loan_Read,Operations Specialist,Low,No,2026-05-30,Active,2025-10-25
+A0053,E1043,FinanceDB,syoung,Finance_Admin,System Administrator,High,Yes,2026-07-15,Active,2025-07-21
+A0054,E1045,Salesforce,dhall,Loan_Read,Financial Analyst,Low,No,2026-05-18,Active,2026-04-29
+A0055,E1013,FinanceDB,myoung,Finance_Admin,IAM Analyst,High,Yes,2026-07-01,Active,2024-10-13
+A0056,E1048,Active Directory,scarter,Domain Admin,Underwriter,Critical,No,2026-05-14,Active,2025-11-02
+A0057,E1026,SAP,ekim,Finance_Read,Security Engineer,Medium,Yes,2026-07-21,Active,2025-11-17
+A0058,E1014,FinanceDB,mwilson,Finance_Admin,AP Analyst,High,Yes,2026-05-11,Active,2024-12-24
+A0059,E1042,Salesforce,mallen,Loan_Admin,Operations Specialist,High,No,2026-06-09,Active,2025-06-11
+A0060,E1029,Active Directory,mwilson,Standard User,Manager,Low,No,2026-05-29,Active,2025-05-10
+A0061,E1048,Active Directory,scarter,Domain Admin,Underwriter,Critical,No,2026-09-15,Active,2025-11-20
+A0062,E1033,Salesforce,jmartin,Loan_Admin,Loan Officer,High,No,2026-09-13,Active,2024-05-21
+A0063,E1049,Active Directory,jreed,Standard User,Financial Analyst,Low,No,2026-07-19,Active,2026-01-19
+A0064,E1013,Active Directory,myoung,Domain Admin,IAM Analyst,Critical,No,2026-09-30,Active,2026-07-21
+A0065,E1016,LoanAPI,mparker,Loan_Operator,Operations Analyst,High,No,2026-09-18,Active,2025-05-28
+A0066,E1027,Active Directory,cwright,Standard User,Loan Officer,Low,No,2026-06-30,Active,2025-04-18
+A0067,E1026,Active Directory,ekim,Standard User,Security Engineer,Low,No,2026-08-30,Active,2024-11-04
+A0068,E1045,SAP,dhall,Finance_Read,Financial Analyst,Medium,Yes,2026-09-09,Active,2024-07-01
+A0069,E1028,Active Directory,ckim,Standard User,Help Desk Analyst,Low,No,2026-08-22,Active,2024-06-05
+A0070,E1045,LoanAPI,dhall,Loan_Operator,Financial Analyst,High,No,2026-09-24,Active,2025-02-13
+A0071,E1016,SAP,mparker,Vendor_Create,Operations Analyst,High,Yes,2026-06-12,Active,2026-04-23
+A0072,E1030,Salesforce,ccarter,Loan_Admin,Manager,High,No,2026-06-15,Active,2024-12-18
+A0073,E1047,FinanceDB,mbrown,Finance_Admin,Cloud Engineer,High,Yes,2026-05-19,Active,2025-06-07
+A0074,E1011,LoanAPI,sking,Loan_Operator,Cloud Engineer,High,No,2026-06-13,Active,2025-12-15
+A0075,E1049,Active Directory,jreed,Standard User,Financial Analyst,Low,No,2026-07-28,Active,2024-07-14
+A0076,E1050,LoanAPI,jreed,Loan_Operator,Loan Officer,High,No,2026-08-06,Active,2025-11-29
+A0077,E1029,SAP,mwilson,Vendor_Create,Manager,High,Yes,2026-07-25,Active,2026-01-09
+A0078,E1018,Salesforce,chall,Loan_Admin,Help Desk Analyst,High,No,2026-07-17,Active,2025-03-02
+A0079,E1006,Active Directory,dparker,Domain Admin,Help Desk Analyst,Critical,No,2026-08-29,Active,2026-01-13
+A0080,E1025,Active Directory,mhall,Domain Admin,Operations Analyst,Critical,No,2026-08-13,Active,2026-07-03
+A0081,E1027,FinanceDB,cwright,Finance_Admin,Loan Officer,High,Yes,2026-07-14,Active,2025-02-28
+A0082,E1030,FinanceDB,ccarter,Finance_Admin,Manager,High,Yes,2026-09-21,Active,2026-02-07
+A0083,E1027,FinanceDB,cwright,Finance_Admin,Loan Officer,High,Yes,2026-05-10,Active,2024-09-24
+A0084,E1002,FinanceDB,cwright,Finance_Admin,AP Analyst,High,Yes,2026-06-06,Active,2026-08-31
+A0085,E1023,Salesforce,jallen,Loan_Read,Help Desk Analyst,Low,No,2026-06-29,Active,2024-05-04
+A0086,E1027,Active Directory,cwright,Standard User,Loan Officer,Low,No,2026-06-04,Active,2026-01-25
+A0087,E1018,FinanceDB,chall,Finance_Admin,Help Desk Analyst,High,Yes,2026-06-04,Active,2026-08-08
+A0088,E1025,Salesforce,mhall,Loan_Admin,Operations Analyst,High,No,2026-06-25,Active,2024-08-26
+A0089,E1011,LoanAPI,sking,Loan_Operator,Cloud Engineer,High,No,2026-09-04,Active,2024-12-08
+A0090,E1035,SAP,cmartin,Finance_Read,Loan Officer,Medium,Yes,2026-06-28,Active,2025-01-08
+A0091,E1037,SAP,mkim,Finance_Read,Underwriter,Medium,Yes,2026-09-15,Active,2024-11-17
+A0092,E1028,Active Directory,ckim,Domain Admin,Help Desk Analyst,Critical,No,2026-06-10,Active,2026-03-04
+A0093,E1004,Salesforce,jbrown,Loan_Read,Operations Analyst,Low,No,2026-07-01,Active,2025-10-06
+A0094,E1014,LoanAPI,mwilson,Loan_Operator,AP Analyst,High,No,2026-07-15,Active,2025-09-26
+A0095,E1049,FinanceDB,jreed,Finance_Admin,Financial Analyst,High,Yes,2026-07-27,Active,2024-07-28
+A0096,E1027,Salesforce,cwright,Loan_Read,Loan Officer,Low,No,2026-09-16,Active,2025-05-13
+A0097,E1002,SAP,cwright,Finance_Read,AP Analyst,Medium,Yes,2026-07-09,Active,2026-01-20
+A0098,E1042,SAP,mallen,Vendor_Create,Operations Specialist,High,Yes,2026-09-26,Active,2024-07-26
+A0099,E1002,Active Directory,cwright,Standard User,AP Analyst,Low,No,2026-08-16,Active,2024-04-30
+A0100,E1002,Active Directory,cwright,Domain Admin,AP Analyst,Critical,No,2026-08-06,Active,2026-04-30
+A0101,E1031,SAP,cparker,Vendor_Create,Financial Analyst,High,Yes,2026-05-15,Active,2026-01-26
+A0102,E1030,Salesforce,ccarter,Loan_Read,Manager,Low,No,2026-07-04,Active,2026-03-19
+A0103,E1039,SAP,cyoung,Vendor_Create,Financial Analyst,High,Yes,2026-08-26,Active,2025-10-23
+A0104,E1007,SAP,sreed,Finance_Read,Security Analyst,Medium,Yes,2026-07-19,Active,2025-01-25
+A0105,E1044,FinanceDB,ahall,Finance_Admin,Credit Analyst,High,Yes,2026-06-27,Active,2024-09-04
+A0106,E1013,SAP,myoung,Vendor_Create,IAM Analyst,High,Yes,2026-08-05,Active,2026-05-25
+A0107,E1045,Salesforce,dhall,Loan_Read,Financial Analyst,Low,No,2026-09-06,Active,2024-06-13
+A0108,E1037,SAP,mkim,Finance_Read,Underwriter,Medium,Yes,2026-07-10,Active,2025-03-10
+A0109,E1028,Salesforce,ckim,Loan_Admin,Help Desk Analyst,High,No,2026-09-19,Active,2025-04-06
+A0110,E1042,Salesforce,mallen,Loan_Admin,Operations Specialist,High,No,2026-10-03,Active,2024-04-20
+A0111,E1027,LoanAPI,cwright,Loan_Operator,Loan Officer,High,No,2026-09-09,Active,2025-06-20
+A0112,E1024,LoanAPI,dclark,Loan_Operator,Accountant,High,No,2026-08-28,Active,2025-06-18
+A0113,E1012,Salesforce,myoung,Loan_Read,Credit Analyst,Low,No,2026-05-22,Active,2024-07-05
+A0114,E1031,LoanAPI,cparker,Loan_Operator,Financial Analyst,High,No,2026-06-17,Active,2024-05-14
+A0115,E1047,Salesforce,mbrown,Loan_Read,Cloud Engineer,Low,No,2026-07-16,Active,2025-12-29
+A0116,E1006,Salesforce,dparker,Loan_Read,Help Desk Analyst,Low,No,2026-06-13,Active,2025-12-31
+A0117,E1049,LoanAPI,jreed,Loan_Operator,Financial Analyst,High,No,2026-05-14,Active,2024-12-21
+A0118,E1043,FinanceDB,syoung,Finance_Admin,System Administrator,High,Yes,2026-07-12,Active,2026-08-08
+A0119,E1032,Salesforce,mwright,Loan_Admin,System Administrator,High,No,2026-08-21,Active,2025-04-25
+A0120,E1014,Salesforce,mwilson,Loan_Admin,AP Analyst,High,No,2026-08-01,Active,2025-09-23
+A0121,E1018,Salesforce,chall,Loan_Read,Help Desk Analyst,Low,No,2026-05-17,Active,2026-08-27
+A0122,E1034,Active Directory,jdavis,Standard User,Underwriter,Low,No,2026-09-15,Active,2026-01-02
+A0123,E1047,FinanceDB,mbrown,Finance_Admin,Cloud Engineer,High,Yes,2026-06-03,Active,2025-02-15
+A0124,E1049,Active Directory,jreed,Standard User,Financial Analyst,Low,No,2026-06-07,Active,2024-11-14
+A0125,E1046,LoanAPI,mmartin,Loan_Operator,System Administrator,High,No,2026-06-14,Active,2024-06-17
+A0126,E1002,SAP,cwright,Vendor_Create,AP Analyst,High,Yes,2026-07-23,Active,2026-01-23
+A0127,E1026,Active Directory,ekim,Standard User,Security Engineer,Low,No,2026-07-20,Active,2024-10-27
+A0128,E1038,Salesforce,tmartin,Loan_Admin,Security Analyst,High,No,2026-06-07,Active,2025-02-17
+A0129,E1034,Salesforce,jdavis,Loan_Admin,Underwriter,High,No,2026-06-20,Active,2024-08-04
+A0130,E1036,Salesforce,jreed,Loan_Admin,Help Desk Analyst,High,No,2026-07-08,Active,2024-09-17
+A0131,E1030,Salesforce,ccarter,Loan_Read,Manager,Low,No,2026-07-20,Active,2025-12-23
+A0132,E1015,SAP,ddavis,Vendor_Create,Cloud Engineer,High,Yes,2026-08-18,Active,2025-10-18
+A0133,E1008,Active Directory,jcarter,Domain Admin,Operations Specialist,Critical,No,2026-08-18,Active,2026-01-28
+A0134,E1048,LoanAPI,scarter,Loan_Operator,Underwriter,High,No,2026-07-28,Active,2024-08-26
+A0135,E1038,Salesforce,tmartin,Loan_Read,Security Analyst,Low,No,2026-09-11,Active,2024-05-07
+A0136,E1013,Salesforce,myoung,Loan_Read,IAM Analyst,Low,No,2026-08-09,Active,2025-09-02
+A0137,E1012,Salesforce,myoung,Loan_Read,Credit Analyst,Low,No,2026-10-03,Active,2024-09-11
+A0138,E1035,Active Directory,cmartin,Domain Admin,Loan Officer,Critical,No,2026-07-28,Active,2026-07-22
+A0139,E1004,Salesforce,jbrown,Loan_Read,Operations Analyst,Low,No,2026-09-04,Active,2024-11-22
+A0140,E1049,LoanAPI,jreed,Loan_Operator,Financial Analyst,High,No,2026-09-10,Active,2026-08-25
+A0141,E1037,Salesforce,mkim,Loan_Read,Underwriter,Low,No,2026-06-08,Active,2025-05-04
+A0142,E1029,Salesforce,mwilson,Loan_Admin,Manager,High,No,2026-08-20,Active,2026-07-16
+A0143,E1017,LoanAPI,jparker,Loan_Operator,System Administrator,High,No,2026-09-07,Active,2024-05-18
+A0144,E1005,FinanceDB,mlopez,Finance_Admin,Operations Specialist,High,Yes,2026-06-03,Active,2026-06-23
+A0145,E1037,SAP,mkim,Finance_Read,Underwriter,Medium,Yes,2026-08-29,Active,2026-04-07
+A0146,E1037,Salesforce,mkim,Loan_Read,Underwriter,Low,No,2026-09-15,Active,2025-12-26
+A0147,E1008,FinanceDB,jcarter,Finance_Admin,Operations Specialist,High,Yes,2026-08-10,Active,2024-07-04
+A0148,E1034,FinanceDB,jdavis,Finance_Admin,Underwriter,High,Yes,2026-06-13,Active,2025-06-10
+A0149,E1020,FinanceDB,mhall,Finance_Admin,Security Analyst,High,Yes,2026-07-20,Active,2025-02-01
+A0150,E1040,SAP,smartin,Finance_Read,Accountant,Medium,Yes,2026-09-11,Active,2024-07-17
+A0151,E1014,Active Directory,mwilson,Standard User,AP Analyst,Low,No,2026-07-31,Active,2024-10-30
+A0152,E1006,Active Directory,dparker,Domain Admin,Help Desk Analyst,Critical,No,2026-08-06,Active,2026-03-13
+A0153,E1036,SAP,jreed,Vendor_Create,Help Desk Analyst,High,Yes,2026-08-27,Active,2026-09-04
+A0154,E1027,LoanAPI,cwright,Loan_Operator,Loan Officer,High,No,2026-06-08,Active,2025-11-12
+A0155,E1003,Active Directory,akim,Standard User,Loan Officer,Low,No,2026-07-25,Active,2024-09-13
+A0156,E1019,LoanAPI,cwright,Loan_Operator,Credit Analyst,High,No,2026-09-18,Active,2024-10-03
+A0157,E1015,Salesforce,ddavis,Loan_Read,Cloud Engineer,Low,No,2026-05-09,Active,2024-10-29
+A0158,E1013,FinanceDB,myoung,Finance_Admin,IAM Analyst,High,Yes,2026-09-07,Active,2025-02-26
+A0159,E1015,Active Directory,ddavis,Domain Admin,Cloud Engineer,Critical,No,2026-07-30,Active,2024-05-13
+A0160,E1010,SAP,tbrown,Vendor_Create,Operations Specialist,High,Yes,2026-09-21,Active,2026-03-21
+A0161,E1020,Salesforce,mhall,Loan_Read,Security Analyst,Low,No,2026-06-16,Active,2026-05-02
+A0162,E1030,Salesforce,ccarter,Loan_Read,Manager,Low,No,2026-06-25,Active,2025-12-02
+A0163,E1033,LoanAPI,jmartin,Loan_Operator,Loan Officer,High,No,2026-06-16,Active,2026-06-16
+A0164,E1039,SAP,cyoung,Finance_Read,Financial Analyst,Medium,Yes,2026-06-18,Active,2024-08-15
+A0165,E1021,Salesforce,cclark,Loan_Read,Operations Specialist,Low,No,2026-09-30,Active,2026-06-05
+A0166,E1015,SAP,ddavis,Finance_Read,Cloud Engineer,Medium,Yes,2026-07-30,Active,2025-01-24
+A0167,E1003,Active Directory,akim,Domain Admin,Loan Officer,Critical,No,2026-06-08,Active,2025-03-24
+A0168,E1042,LoanAPI,mallen,Loan_Operator,Operations Specialist,High,No,2026-07-27,Active,2026-03-05
+A0169,E1038,FinanceDB,tmartin,Finance_Admin,Security Analyst,High,Yes,2026-06-03,Active,2026-06-05
+A0170,E1031,Salesforce,cparker,Loan_Admin,Financial Analyst,High,No,2026-06-24,Active,2025-09-30
+A0171,E1021,SAP,cclark,Vendor_Create,Operations Specialist,High,Yes,2026-08-26,Active,2025-10-04
+A0172,E1027,LoanAPI,cwright,Loan_Operator,Loan Officer,High,No,2026-07-25,Active,2024-10-28
+A0173,E1026,SAP,ekim,Finance_Read,Security Engineer,Medium,Yes,2026-06-12,Active,2026-06-08
+A0174,E1021,Salesforce,cclark,Loan_Read,Operations Specialist,Low,No,2026-07-16,Active,2026-05-11
+A0175,E1050,FinanceDB,jreed,Finance_Admin,Loan Officer,High,Yes,2026-05-28,Active,2024-05-15
+A0176,E1001,LoanAPI,cdavis,Loan_Operator,Financial Analyst,High,No,2026-06-23,Active,2026-07-13
+A0177,E1013,Salesforce,myoung,Loan_Admin,IAM Analyst,High,No,2026-06-01,Active,2024-12-05
+A0178,E1029,SAP,mwilson,Finance_Read,Manager,Medium,Yes,2026-08-15,Active,2025-12-07
+A0179,E1036,Active Directory,jreed,Domain Admin,Help Desk Analyst,Critical,No,2026-07-25,Active,2025-06-15
+A0180,E1045,LoanAPI,dhall,Loan_Operator,Financial Analyst,High,No,2026-09-05,Active,2026-08-08
+A0181,E1041,Active Directory,jwilson,Standard User,Loan Officer,Low,No,2026-08-27,Active,2025-10-23
+A0182,E1036,SAP,jreed,Finance_Read,Help Desk Analyst,Medium,Yes,2026-05-18,Active,2025-07-16
+A0183,E1006,Active Directory,dparker,Standard User,Help Desk Analyst,Low,No,2026-09-07,Active,2025-05-22
+A0184,E1008,Active Directory,jcarter,Domain Admin,Operations Specialist,Critical,No,2026-06-01,Active,2024-09-03
+A0185,E1019,Salesforce,cwright,Loan_Read,Credit Analyst,Low,No,2026-06-22,Active,2024-05-05
+A0186,E1031,LoanAPI,cparker,Loan_Operator,Financial Analyst,High,No,2026-08-05,Active,2025-05-27
+A0187,E1036,Active Directory,jreed,Domain Admin,Help Desk Analyst,Critical,No,2026-06-30,Active,2026-02-23
+A0188,E1039,Active Directory,cyoung,Domain Admin,Financial Analyst,Critical,No,2026-09-19,Active,2025-11-28
+A0189,E1050,FinanceDB,jreed,Finance_Admin,Loan Officer,High,Yes,2026-07-11,Active,2024-06-22
+A0190,E1033,Salesforce,jmartin,Loan_Read,Loan Officer,Low,No,2026-10-06,Active,2025-11-21
+A0191,E1047,Salesforce,mbrown,Loan_Read,Cloud Engineer,Low,No,2026-05-09,Active,2025-01-21
+A0192,E1043,LoanAPI,syoung,Loan_Operator,System Administrator,High,No,2026-08-29,Active,2025-06-06
+A0193,E1035,LoanAPI,cmartin,Loan_Operator,Loan Officer,High,No,2026-07-10,Active,2025-10-01
+A0194,E1036,FinanceDB,jreed,Finance_Admin,Help Desk Analyst,High,Yes,2026-06-12,Active,2025-10-12
+A0195,E1013,Active Directory,myoung,Standard User,IAM Analyst,Low,No,2026-05-13,Active,2025-08-10
+A0196,E1015,FinanceDB,ddavis,Finance_Admin,Cloud Engineer,High,Yes,2026-09-25,Active,2025-10-16
+A0197,E1048,LoanAPI,scarter,Loan_Operator,Underwriter,High,No,2026-07-01,Active,2025-08-07
+A0198,E1043,Active Directory,syoung,Domain Admin,System Administrator,Critical,No,2026-06-02,Active,2026-07-31
+A0199,E1009,Salesforce,smartin,Loan_Admin,Accountant,High,No,2026-09-11,Active,2024-04-24
+A0200,E1029,SAP,mwilson,Vendor_Create,Manager,High,Yes,2026-05-25,Active,2025-05-27

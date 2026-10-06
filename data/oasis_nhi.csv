@@ -1,0 +1,41 @@
+nhi_id,name,type,platform,owner,owner_name,owner_status,application,environment,privilege_level,last_used,credential_age_days,rotation_required,resource
+NHI001,svc_legacy_reporting,API Key,Active Directory,E1050,James Reed,Terminated,FinanceDB,Production,High,2026-06-08,380,Yes,FinanceDB
+NHI002,svc_salesforce_02,Service Account,Azure,E1022,Maria Kim,Active,Salesforce,Test,Critical,2026-04-23,493,No,Salesforce
+NHI003,svc_salesforce_03,Service Account,AWS,E1041,Jordan Wilson,Active,Salesforce,Production,Medium,2026-05-21,328,No,Salesforce
+NHI004,svc_financedb_04,Service Account,AWS,E1015,David Davis,Active,FinanceDB,Test,Low,2026-06-17,232,Yes,FinanceDB
+NHI005,svc_sap_05,Service Account,Azure,E1045,David Hall,Active,SAP,Production,High,2026-09-29,188,No,SAP
+NHI006,svc_loanapi_06,API Key,Azure,E1028,Casey Kim,Active,LoanAPI,Test,Medium,2026-08-05,92,Yes,LoanAPI
+NHI007,svc_salesforce_07,API Key,Active Directory,E1006,David Parker,Active,Salesforce,Development,Medium,2026-05-01,123,No,Salesforce
+NHI008,svc_sap_08,Service Principal,AWS,E1041,Jordan Wilson,Active,SAP,Production,Critical,2026-06-11,466,No,SAP
+NHI009,svc_loanapi_09,Service Principal,Azure,E1044,Avery Hall,Active,LoanAPI,Test,High,2026-09-18,332,No,LoanAPI
+NHI010,svc_sap_10,Service Principal,Active Directory,E1045,David Hall,Active,SAP,Development,Critical,2026-06-12,59,Yes,SAP
+NHI011,svc_sap_11,Service Principal,AWS,E1025,Morgan Hall,Active,SAP,Development,Low,2026-05-12,429,No,SAP
+NHI012,svc_financedb_12,API Key,AWS,E1018,Casey Hall,Active,FinanceDB,Production,Critical,2026-05-15,431,No,FinanceDB
+NHI013,svc_loanapi_13,Service Principal,Active Directory,E1050,James Reed,Terminated,LoanAPI,Test,Medium,2026-05-04,322,No,LoanAPI
+NHI014,svc_loanapi_14,Service Account,AWS,E1044,Avery Hall,Active,LoanAPI,Test,Low,2026-04-29,163,No,LoanAPI
+NHI015,svc_sap_15,Service Account,Azure,E1003,Alex Kim,Active,SAP,Development,Critical,2026-09-03,94,Yes,SAP
+NHI016,svc_sap_16,API Key,Azure,E1009,Sarah Martin,Active,SAP,Production,High,2026-05-24,472,No,SAP
+NHI017,svc_sap_17,Service Principal,Active Directory,E1019,Casey Wright,Active,SAP,Production,Medium,2026-09-07,445,No,SAP
+NHI018,svc_sap_18,Service Principal,Active Directory,E1036,Jessica Reed,Active,SAP,Development,Low,2026-09-13,237,No,SAP
+NHI019,svc_sap_19,Service Principal,AWS,E1044,Avery Hall,Active,SAP,Development,Low,2026-05-10,350,Yes,SAP
+NHI020,svc_financedb_20,API Key,Azure,E1031,Casey Parker,Active,FinanceDB,Test,Medium,2026-05-01,336,Yes,FinanceDB
+NHI021,svc_salesforce_21,Service Principal,AWS,E1041,Jordan Wilson,Active,Salesforce,Development,Low,2026-04-10,76,Yes,Salesforce
+NHI022,svc_sap_22,Service Account,Active Directory,E1003,Alex Kim,Active,SAP,Production,Medium,2026-06-02,203,No,SAP
+NHI023,svc_salesforce_23,API Key,AWS,E1024,David Clark,Active,Salesforce,Production,Critical,2026-05-09,340,Yes,Salesforce
+NHI024,svc_salesforce_24,Service Account,AWS,E1032,Michael Wright,Active,Salesforce,Development,Medium,2026-07-27,232,No,Salesforce
+NHI025,svc_sap_25,API Key,Azure,E1016,Morgan Parker,Active,SAP,Test,High,2026-09-11,36,No,SAP
+NHI026,svc_loanapi_26,Service Principal,Active Directory,E1018,Casey Hall,Active,LoanAPI,Test,Medium,2026-09-05,333,Yes,LoanAPI
+NHI027,svc_sap_27,Service Account,AWS,E1004,Jordan Brown,Active,SAP,Production,Low,2026-08-05,429,Yes,SAP
+NHI028,svc_loanapi_28,Service Principal,Active Directory,E1038,Taylor Martin,Active,LoanAPI,Test,Low,2026-08-08,146,Yes,LoanAPI
+NHI029,svc_sap_29,Service Account,AWS,E1009,Sarah Martin,Active,SAP,Production,Medium,2026-08-23,12,No,SAP
+NHI030,svc_sap_30,Service Account,Azure,E1016,Morgan Parker,Active,SAP,Production,Medium,2026-10-02,384,No,SAP
+NHI031,svc_financedb_31,Service Principal,Azure,E1034,James Davis,Active,FinanceDB,Development,Low,2026-09-20,236,Yes,FinanceDB
+NHI032,svc_financedb_32,API Key,Azure,E1040,Sarah Martin,Active,FinanceDB,Development,Low,2026-04-21,36,No,FinanceDB
+NHI033,svc_salesforce_33,Service Account,Azure,E1026,Emily Kim,Active,Salesforce,Test,Critical,2026-04-14,42,Yes,Salesforce
+NHI034,svc_loanapi_34,Service Account,Azure,E1021,Casey Clark,Active,LoanAPI,Test,High,2026-09-20,200,No,LoanAPI
+NHI035,svc_salesforce_35,API Key,Active Directory,E1030,Casey Carter,Active,Salesforce,Test,Medium,2026-09-11,225,No,Salesforce
+NHI036,svc_salesforce_36,Service Principal,Azure,E1015,David Davis,Active,Salesforce,Development,Low,2026-07-12,165,No,Salesforce
+NHI037,svc_sap_37,Service Account,AWS,E1021,Casey Clark,Active,SAP,Development,Low,2026-07-03,51,Yes,SAP
+NHI038,svc_salesforce_38,API Key,AWS,E1006,David Parker,Active,Salesforce,Development,Medium,2026-09-12,289,Yes,Salesforce
+NHI039,svc_sap_39,Service Account,Azure,E1038,Taylor Martin,Active,SAP,Development,Critical,2026-04-18,449,Yes,SAP
+NHI040,svc_sap_40,Service Account,AWS,E1019,Casey Wright,Active,SAP,Test,Medium,2026-07-08,84,No,SAP

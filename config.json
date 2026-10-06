@@ -1,0 +1,31 @@
+{
+"review_settings": {
+    "iam_reviewer": "Dane Shuler",
+    "enforce_assigned_reviewer": true
+},
+  "risk_thresholds": {
+    "normal": 0,
+    "medium": 20,
+    "high": 40,
+    "critical": 70
+  },
+  "human_rules": {
+    "terminated_active_access": 100,
+    "critical_access": 40,
+    "high_access": 25,
+    "sox_access": 20,
+    "stale_login_days": 90,
+    "stale_login_score": 20
+  },
+  "nhi_rules": {
+    "terminated_owner": 100,
+    "critical_privilege": 40,
+    "high_privilege": 25,
+    "production": 20,
+    "credential_age_days": 365,
+    "old_credential_score": 30,
+    "rotation_required": 20,
+    "stale_usage_days": 90,
+    "stale_usage_score": 20
+  }
+}
